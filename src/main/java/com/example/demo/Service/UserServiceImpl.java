@@ -2,40 +2,35 @@ package com.example.demo.Service;
 
 import com.example.demo.DAO.FakeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl {
-
-    private final FakeRepo user;
+public class UserServiceImpl implements UserService {
 
     @Autowired
-    public UserServiceImpl(@Qualifier("postgres")  FakeRepo user) {
-        this.user = user;
-    }
+    private  FakeRepo user;
 
-
-    public String addUser(long id, String name, String surname){
-        user.insertUser(id,name,surname);
+    @Override
+    public void addUser( String name, String surname){
+        user.insertUser(1,name,surname);
         System.out.println(user);
-        return name;
     }
 
-    public String getUser(long id){
-      String User =   user.findUserById(id);
+    @Override
+    public void getUser(long id){
+        user.findUserById(id);
+        cacheUser(""+ user);
         System.out.println("Hello " + user);
-        return User;
+
     }
 
+    @Override
     public void removeUser(long id){
         user.deleteUser(id);
         System.out.println(user + " removed");
     }
 
-    public String cacheUser(String cachename){
-        String name = getUser(15);
-
+    public void cacheUser(String cachename){
         try
         {
             System.out.println("Going to sleep for 5 Secs.. to simulate backend call.");
@@ -45,7 +40,6 @@ public class UserServiceImpl {
         {
             e.printStackTrace();
         }
-        return name;
     }
 
 }
